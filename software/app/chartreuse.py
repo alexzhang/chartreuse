@@ -15,7 +15,7 @@ pygame.display.set_caption('Chartreuse')
 
 DISPLAYSURF = pygame.display.set_mode((800, 480))
 
-myfont = pygame.font.SysFont('monospace', 30)
+myfont = pygame.font.Font('assets/Kelson Sans Regular.ttf', 30)
 clock = pygame.time.Clock()
 
 running = True
@@ -23,23 +23,10 @@ ticks = 0
 kmod = 0
 key = 0
 while running:
-    ticks += 1
+    # Run at 30fps
     time = clock.tick(30)
 
-    DISPLAYSURF.fill((0, 0, 0))
-
-    textsurface = myfont.render(str(kmod) + " - " + str(key), False, (180, 180, 200))
-    DISPLAYSURF.blit(textsurface, (40, 305))
-    textsurface = myfont.render(str(int(1000 * 1/time)) + " fps", False, (180, 180, 200))
-    DISPLAYSURF.blit(textsurface, (40, 200))
-    textsurface = myfont.render(str(clock.get_time()) + " milliseconds", False, (180, 180, 200))
-    DISPLAYSURF.blit(textsurface, (40, 235))
-    textsurface = myfont.render(str(pygame.time.get_ticks() % 1000), False, (180, 180, 200))
-    DISPLAYSURF.blit(textsurface, (40, 270))
-
-    v = 30 + ticks % 720
-    pygame.draw.polygon(DISPLAYSURF, CHARTREUSE, ((30, 30), (v, 30), (v, 80), (30,80)))
-
+    ### PROCESS INPUT ###
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -50,6 +37,26 @@ while running:
                 running = False
             if (event.key == pygame.K_F4 and bool(event.mod & pygame.KMOD_ALT)):
                 running = False
+
+    ### UPDATE STATE ###
+    ticks += 1
+    v = 30 + ticks % 720
+
+    ### RENDER ###
+    DISPLAYSURF.fill((0, 0, 0))
+
+    textsurface = myfont.render(str(kmod) + " - " + str(key), False, (180, 180, 200))
+    DISPLAYSURF.blit(textsurface, (40, 305))
+    textsurface = myfont.render("FPS: " + str(int(1000 * 1/time)), False, (180, 180, 200))
+    DISPLAYSURF.blit(textsurface, (40, 200))
+    textsurface = myfont.render(str(clock.get_time()) + " milliseconds", False, (180, 180, 200))
+    DISPLAYSURF.blit(textsurface, (40, 235))
+    textsurface = myfont.render(str(ticks), False, (180, 180, 200))
+    DISPLAYSURF.blit(textsurface, (40, 270))
+
+    pygame.draw.polygon(DISPLAYSURF, CHARTREUSE, ((30, 30), (v, 30), (v, 80), (30,80)))
+
+
 
     pygame.display.flip()
 
